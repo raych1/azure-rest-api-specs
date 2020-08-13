@@ -26,9 +26,18 @@ These are the global settings for the AppConfiguration API.
 
 ``` yaml
 openapi-type: arm
-tag: package-2020-06-01
+tag: package-2020-10
 ```
 
+
+### Tag: package-2020-10
+
+These settings apply only when `--tag=package-2020-10` is specified on the command line.
+
+```yaml $(tag) == 'package-2020-10'
+input-file:
+  - Microsoft.AppConfiguration/stable/2020-10-10/appconfiguration.json
+```
 ### Tag: package-2020-06-01
 
 These settings apply only when `--tag=package-2020-06-01` is specified on the command line.
@@ -129,7 +138,7 @@ directive:
     reason: This is data plane level information proxied through the RP and cannot be changed.
 ```
 
-## Multi-API/Profile support for AutoRest v3 generators 
+## Multi-API/Profile support for AutoRest v3 generators
 
 AutoRest V3 generators require the use of `--tag=all-api-versions` to select api files.
 
@@ -148,11 +157,10 @@ input-file:
 
 ```
 
-If there are files that should not be in the `all-api-versions` set, 
+If there are files that should not be in the `all-api-versions` set,
 uncomment the  `exclude-file` section below and add the file paths.
 
 ``` yaml $(tag) == 'all-api-versions'
 #exclude-file: 
 #  - $(this-folder)/Microsoft.Example/stable/2010-01-01/somefile.json
 ```
-
