@@ -100,6 +100,7 @@ steps:
 
             # sparse-checkout commands after initial checkout will auto-checkout again
             if (!$hasInitialized) {
+              Write-Host "Checking out commitish $($repository.Commitish) in $($repository.Name)"
               # Remove refs/heads/ prefix from branch names
               $commitish = $repository.Commitish -replace '^refs/heads/', ''
 
@@ -109,6 +110,7 @@ steps:
             } else {
               Write-Host "Skipping checkout as repo has already been initialized"
             }
+            git log -n 7
 
             Pop-Location
         }

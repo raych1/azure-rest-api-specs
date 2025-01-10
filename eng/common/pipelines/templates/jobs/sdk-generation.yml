@@ -49,6 +49,8 @@ jobs:
       value: $(System.DefaultWorkingDirectory)/$(SpecRepoName)
     - name: SdkRepoDirectory
       value: $(System.DefaultWorkingDirectory)/${{ parameters.SdkRepoName }}
+    - name: SpecRepoBranchVar
+      value: ${{ if eq(variables['Build.Reason'], 'PullRequest') }}${{ variables['Build.SourceBranch'] }}${{ else }}${{ parameters.SpecRepoBranch }}${{ end }}
   pool:
     name: $(LINUXPOOL)
     vmImage: $(LINUXVMIMAGE)
@@ -66,7 +68,7 @@ jobs:
         - '!sdk/**/session-records/*'
         Repositories:
         - Name: $(SpecRepoFullName)
-          Commitish: ${{ parameters.SpecRepoBranch }}
+          Commitish: $(SpecRepoBranchVar)
           WorkingDirectory: $(SpecRepoDirectory)
         - Name: ${{ parameters.SdkRepoOwner }}/${{ parameters.SdkRepoName }}
           Commitish: ${{ parameters.SdkRepoBranch }}
@@ -119,6 +121,7 @@ jobs:
           --wf "$(System.DefaultWorkingDirectory)" \
           -l "${{ parameters.SdkRepoNameForSpecGen }}" \
           -c "$(SpecRepoCommit)" \
+          -t $true \
           $optional_params
       displayName: 'Generate SDK'
 
