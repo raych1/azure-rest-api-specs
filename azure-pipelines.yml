@@ -23,4 +23,3 @@ variables:
 
 jobs:
 - template: .azure-pipelines/BranchProtectionForPrivateRepo.yml
-- template: .azure-pipelines/ShouldSendPRToMain.yml
