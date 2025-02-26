@@ -17,7 +17,9 @@ export async function main() {
   if (runMode) {
     statusCode = await generateSdkForBatchSpecs(runMode);
   } else if (pullRequestNumber) {
-    statusCode = await generateSdkForSpecPr();
+    if (pullRequestNumber === "pr") {
+      statusCode = await generateSdkForSpecPr();
+    }
   } else {
     statusCode = await generateSdkForSingleSpec();
   }

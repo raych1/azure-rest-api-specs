@@ -136,9 +136,6 @@ extends:
               - Name: $(SpecRepoOwner)/$(SpecRepoName)
                 Commitish: ${{ parameters.SpecRepoCommit }}
                 WorkingDirectory: $(SpecRepoDirectory)
-              - Name: $(SdkRepoOwner)/$(SdkRepoName)
-                Commitish: ${{ parameters.SdkRepoCommit }}
-                WorkingDirectory: $(SdkRepoDirectory)
               SkipCheckoutNone: true
 
           - script: |
