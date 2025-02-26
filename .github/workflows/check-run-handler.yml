@@ -50,13 +50,27 @@ jobs:
                 headSha: pullRequest.head_sha
               });
 
-              // Log annotations if they exist
-              if (checkRun.output && checkRun.output.annotations) {
-                console.log('Check run annotations:');
-                console.log(JSON.stringify(checkRun.output.annotations, null, 2));
+              // Check if there are annotations and fetch them
+              if (checkRun.output && checkRun.output.annotations_count > 0) {
+                console.log(`Found ${checkRun.output.annotations_count} annotations`);
+
+                // Parse the annotations URL to get required parameters
+                const annotationsUrl = new URL(checkRun.output.annotations_url);
+                const pathParts = annotationsUrl.pathname.split('/');
+                const checkRunId = pathParts[pathParts.length - 2];
+
+                // Fetch annotations using octokit
+                const annotations = await github.rest.checks.listAnnotations({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  check_run_id: parseInt(checkRunId)
+                });
+
+                console.log('Fetched annotations:');
+                console.log(JSON.stringify(annotations.data, null, 2));
 
                 // Log key properties of each annotation
-                checkRun.output.annotations.forEach((annotation, index) => {
+                annotations.data.forEach((annotation, index) => {
                   console.log(`Annotation ${index + 1}:`, {
                     message: annotation.message,
                     path: annotation.path,

@@ -179,7 +179,7 @@ extends:
                 optional_params="$optional_params --pr-number $(System.PullRequest.PullRequestNumber)"
                 specPrUrl="${{ parameters.SpecRepoUrl }}/pull/$(System.PullRequest.PullRequestNumber)"
                 sdk_gen_info="$sdk_gen_info spec PR: $specPrUrl"
-                echo "##vso[task.logissue type=information]pr#:$(System.PullRequest.PullRequestNumber)"
+                echo "##vso[task.logissue type=warning]]This is just an informational message, not a real warning.pr#:$(System.PullRequest.PullRequestNumber)"
               fi
 
               if [ "${{ parameters.SpecBatchTypes }}" != "" ]; then
