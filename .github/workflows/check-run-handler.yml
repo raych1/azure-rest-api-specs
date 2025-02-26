@@ -49,6 +49,25 @@ jobs:
                 prNumber: pullRequest.number,
                 headSha: pullRequest.head_sha
               });
+
+              // Log annotations if they exist
+              if (checkRun.output && checkRun.output.annotations) {
+                console.log('Check run annotations:');
+                console.log(JSON.stringify(checkRun.output.annotations, null, 2));
+
+                // Log key properties of each annotation
+                checkRun.output.annotations.forEach((annotation, index) => {
+                  console.log(`Annotation ${index + 1}:`, {
+                    message: annotation.message,
+                    path: annotation.path,
+                    level: annotation.annotation_level,
+                    start_line: annotation.start_line,
+                    end_line: annotation.end_line
+                  });
+                });
+              } else {
+                console.log('No annotations found in check run');
+              }
             } catch (error) {
               console.error('Error processing check run:', error);
               throw error;
