@@ -6,9 +6,6 @@ on:
 
 jobs:
   process-check-run:
-    # Only run this job if:
-    # 1. The check run is from Azure Pipelines
-    # 2. The check is associated with a pull request
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,24 +19,37 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log("event.check_run.name: ", github.event.check_run.name);
-            console.log("event.check_run.pull_requests: ", github.event.check_run.pull_requests);
-            if (github.event.check_run.pull_requests != null) {
-              console.log("event.check_run.pull_requests[0]: ", github.event.check_run.pull_requests[0]);
+            try {
+              // Log the entire payload first for debugging
+              console.log('Full context payload:');
+              console.log(JSON.stringify(context.payload, null, 2));
+
+              const checkRun = context.payload.check_run;
+              if (!checkRun) {
+                throw new Error('No check run data found in the payload');
+              }
+
+              // Log the entire checkRun object
+              console.log('Full check run object:');
+              console.log(JSON.stringify(checkRun, null, 2));
+
+              console.log("Check run name:", checkRun.name);
+
+              if (!checkRun.pull_requests || checkRun.pull_requests.length === 0) {
+                console.log('No pull requests associated with this check run');
+                return;
+              }
+
+              const pullRequest = checkRun.pull_requests[0];
+              console.log('Processing check run for PR:', pullRequest.number);
+              console.log('Check run details:', {
+                name: checkRun.name,
+                conclusion: checkRun.conclusion,
+                status: checkRun.status,
+                prNumber: pullRequest.number,
+                headSha: pullRequest.head_sha
+              });
+            } catch (error) {
+              console.error('Error processing check run:', error);
+              throw error;
             }
-            // Dump the entire payload with proper formatting
-            console.log('Full check run payload:');
-            console.log(JSON.stringify(context.payload, null, 2));
-            
-            // Keep existing logging
-            const checkRun = context.payload.check_run;
-            const pullRequest = checkRun.pull_requests[0];
-            
-            console.log('Processing check run for PR:', pullRequest.number);
-            console.log('Check run details:', {
-              name: checkRun.name,
-              conclusion: checkRun.conclusion,
-              status: checkRun.status,
-              prNumber: pullRequest.number,
-              headSha: pullRequest.head_sha
-            });
