@@ -42,9 +42,7 @@ jobs:
               console.log('Check run details:', {
                 name: checkRun.name,
                 conclusion: checkRun.conclusion,
-                status: checkRun.status,
-                prNumber: pullRequest.number,
-                headSha: pullRequest.head_sha
+                status: checkRun.status
               });
 
               // Search for issues related to the head_sha
