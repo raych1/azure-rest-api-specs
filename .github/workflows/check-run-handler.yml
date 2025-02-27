@@ -34,14 +34,11 @@ jobs:
               console.log(JSON.stringify(checkRun, null, 2));
 
               console.log("Check run name:", checkRun.name);
-
-              if (!checkRun.pull_requests || checkRun.pull_requests.length === 0) {
-                console.log('No pull requests associated with this check run');
+              if (checkRun.name !== 'test-sdk-gen (SDK Generation Job)') {
+                console.log('Ignoring check run with name:', checkRun.name);
                 return;
               }
 
-              const pullRequest = checkRun.pull_requests[0];
-              console.log('Processing check run for PR:', pullRequest.number);
               console.log('Check run details:', {
                 name: checkRun.name,
                 conclusion: checkRun.conclusion,
@@ -50,37 +47,28 @@ jobs:
                 headSha: pullRequest.head_sha
               });
 
-              // Check if there are annotations and fetch them
-              if (checkRun.output && checkRun.output.annotations_count > 0) {
-                console.log(`Found ${checkRun.output.annotations_count} annotations`);
-
-                // Parse the annotations URL to get required parameters
-                const annotationsUrl = new URL(checkRun.output.annotations_url);
-                const pathParts = annotationsUrl.pathname.split('/');
-                const checkRunId = pathParts[pathParts.length - 2];
-
-                // Fetch annotations using octokit
-                const annotations = await github.rest.checks.listAnnotations({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  check_run_id: parseInt(checkRunId)
-                });
-
-                console.log('Fetched annotations:');
-                console.log(JSON.stringify(annotations.data, null, 2));
-
-                // Log key properties of each annotation
-                annotations.data.forEach((annotation, index) => {
-                  console.log(`Annotation ${index + 1}:`, {
-                    message: annotation.message,
-                    path: annotation.path,
-                    level: annotation.annotation_level,
-                    start_line: annotation.start_line,
-                    end_line: annotation.end_line
+              // Search for issues related to the head_sha
+              if (checkRun.head_sha) {
+                console.log('Searching for issues with SHA:', checkRun.head_sha);
+                try {
+                  const searchResponse = await github.rest.search.issuesAndPullRequests({
+                    q: `sha:${checkRun.head_sha}`
                   });
-                });
-              } else {
-                console.log('No annotations found in check run');
+
+                  console.log('Search response:', {
+                    total_count: searchResponse.data.total_count,
+                    items_count: searchResponse.data.items.length
+                  });
+
+                  if (searchResponse.data.items.length > 0) {
+                    const firstItem = searchResponse.data.items[0];
+                    console.log('First matching issue/PR URL:', firstItem.html_url);
+                  } else {
+                    console.log('No issues found for this SHA');
+                  }
+                } catch (searchError) {
+                  console.error('Error searching issues:', searchError);
+                }
               }
             } catch (error) {
               console.error('Error processing check run:', error);
