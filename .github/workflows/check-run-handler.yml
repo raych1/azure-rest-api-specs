@@ -1,0 +1,173 @@
+name: Handle Azure Pipeline Check Run
+
+on:
+  check_run:
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      check_run_id:
+        description: 'Check run ID to process'
+        required: false
+        default: '38335408598'
+        type: string
+
+jobs:
+  process-check-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Process Check Run Event
+        uses: actions/github-script@v7
+        env:
+          AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
+        with:
+          script: |
+            try {
+              // Determine check run ID to use (from manual input or hardcoded default)
+              const checkRunId = context.payload.inputs?.check_run_id || '38335408598';
+              console.log(`Fetching check run with ID: ${checkRunId}`);
+              
+              // First fetch the check run with specific ID
+              const checkRunData = await github.rest.checks.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                check_run_id: parseInt(checkRunId, 10)
+              });
+              
+              console.log('Check run data retrieved:');
+              console.log(JSON.stringify(checkRunData.data, null, 2));
+              
+              // Log the entire payload first for debugging
+              console.log('Full context payload:');
+              console.log(JSON.stringify(context.payload, null, 2));
+
+              // Use the check run data we retrieved instead of from the payload
+              const checkRun = checkRunData.data;
+              if (!checkRun) {
+                throw new Error('No check run data found in the API response');
+              }
+
+              // Log the entire checkRun object
+              console.log('Full check run object:');
+              console.log(JSON.stringify(checkRun, null, 2));
+
+              console.log("Check run name:", checkRun.name);
+              if (checkRun.name !== 'test-sdk-gen (SDK Generation Job)') {
+                console.log('Ignoring check run with name:', checkRun.name);
+                return;
+              }
+
+              console.log('Check run details:', {
+                name: checkRun.name,
+                conclusion: checkRun.conclusion,
+                status: checkRun.status
+              });
+
+              // Extract build ID from details_url if available
+              if (checkRun.details_url) {
+                console.log('Details URL:', checkRun.details_url);
+                
+                // Extract buildId using regex
+                const buildIdMatch = checkRun.details_url.match(/buildId=(\d+)/);
+                if (buildIdMatch && buildIdMatch[1]) {
+                  const buildId = buildIdMatch[1];
+                  console.log('Extracted Build ID:', buildId);
+                  
+                  // Extract organization and project from URL
+                  const urlParts = new URL(checkRun.details_url);
+                  const pathSegments = urlParts.pathname.split('/').filter(Boolean);
+                  
+                  if (pathSegments.length >= 2) {
+                    const organization = pathSegments[0]; // e.g., azure-sdk
+                    const project = pathSegments[1]; // e.g., fadad8ea-1e34-4d7a-9016-fd29b14e8b94
+                    
+                    console.log(`Organization: ${organization}, Project: ${project}`);
+                    
+                    // Construct artifacts URL
+                    const artifactsUrl = `https://dev.azure.com/${organization}/${project}/_build/results?buildId=${buildId}&view=artifacts`;
+                    console.log('Artifacts URL:', artifactsUrl);
+                    
+                    // Call Azure DevOps REST API to list artifacts
+                    // Access environment variable correctly through process.env
+                    const azureDevOpsPAT = process.env.AZURE_DEVOPS_PAT;
+                    if (azureDevOpsPAT) {
+                      try {
+                        // Base64 encode the PAT for authentication
+                        const base64PAT = Buffer.from(`:${azureDevOpsPAT}`).toString('base64');
+                        
+                        // API URL to list artifacts
+                        const apiUrl = `https://dev.azure.com/${organization}/${project}/_apis/build/builds/${buildId}/artifacts?api-version=7.0`;
+                        
+                        console.log('Calling Azure DevOps API to list artifacts...');
+                        
+                        // Use Node.js fetch to call the API
+                        const response = await fetch(apiUrl, {
+                          method: 'GET',
+                          headers: {
+                            'Authorization': `Basic ${base64PAT}`,
+                            'Content-Type': 'application/json'
+                          }
+                        });
+                        
+                        if (response.ok) {
+                          const artifacts = await response.json();
+                          console.log('Artifacts found:', artifacts.count);
+                          console.log('Artifacts list:', JSON.stringify(artifacts.value, null, 2));
+                          
+                          // Process artifacts as needed
+                          for (const artifact of artifacts.value) {
+                            console.log(`Artifact: ${artifact.name}, Download URL: ${artifact.resource.downloadUrl}`);
+                          }
+                        } else {
+                          console.error('Failed to fetch artifacts:', response.status, response.statusText);
+                          const errorText = await response.text();
+                          console.error('Error details:', errorText);
+                        }
+                      } catch (apiError) {
+                        console.error('Error calling Azure DevOps API:', apiError);
+                      }
+                    } else {
+                      console.warn('AZURE_DEVOPS_PAT not provided, skipping API call to list artifacts');
+                    }
+                  } else {
+                    console.error('Could not extract organization and project from URL:', checkRun.details_url);
+                  }
+                } else {
+                  console.error('Could not extract buildId from details_url:', checkRun.details_url);
+                }
+              } else {
+                console.log('No details_url found in check run');
+              }
+              // Search for issues related to the head_sha
+              if (checkRun.head_sha) {
+                console.log('Searching for issues with SHA:', checkRun.head_sha);
+                try {
+                  const searchResponse = await github.rest.search.issuesAndPullRequests({
+                    q: `sha:${checkRun.head_sha}`
+                  });
+
+                  console.log('Search response:', {
+                    total_count: searchResponse.data.total_count,
+                    items_count: searchResponse.data.items.length
+                  });
+
+                  if (searchResponse.data.items.length > 0) {
+                    const firstItem = searchResponse.data.items[0];
+                    console.log('First matching issue/PR URL:', firstItem.html_url);
+                  } else {
+                    console.log('No issues found for this SHA');
+                  }
+                } catch (searchError) {
+                  console.error('Error searching issues:', searchError);
+                }
+              }
+            } catch (error) {
+              console.error('Error processing check run:', error);
+              throw error;
+            }
