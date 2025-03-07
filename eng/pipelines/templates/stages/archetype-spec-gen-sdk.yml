@@ -182,6 +182,13 @@ extends:
               echo "##vso[task.setvariable variable=GeneratedSDKInformation]$sdk_gen_info"
               echo "Generated SDK Information : $sdk_gen_info"
 
+              # Create the breaking change indicator file
+              echo "This file indicates potential breaking changes in the Go SDK" > $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
+              echo "Generated at: $(date)" >> $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
+              echo "Build ID: $(Build.BuildId)" >> $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
+              echo "Repository: ${{ parameters.SpecRepoUrl }}" >> $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
+              echo "Created breaking change file at: $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk"
+
               cd $(SpecRepoDirectory)
               npm ci
               node $(SpecRepoDirectory)/eng/tools/spec-gen-sdk-runner/cmd/spec-gen-sdk-runner.js \
