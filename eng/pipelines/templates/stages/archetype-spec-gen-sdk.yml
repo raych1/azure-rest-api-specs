@@ -60,9 +60,9 @@ extends:
               artifactName: "spec-gen-sdk-logs"
               targetPath: "$(System.DefaultWorkingDirectory)/out/logs"
             - output: pipelineArtifact
-              displayName: Publish label file to Pipeline Artifacts
-              condition: ne(variables['ValidationResult'], '')
-              artifactName: $(labelArtifactName)
+              displayName: Publish breaking change file to Pipeline Artifacts
+              condition: succeededOrFailed()
+              artifactName: "go-sdk-breaking-change-indicator"
               targetPath: "$(System.DefaultWorkingDirectory)/out/test"
 
         steps:
@@ -187,11 +187,14 @@ extends:
               echo "##vso[task.setvariable variable=GeneratedSDKInformation]$sdk_gen_info"
               echo "Generated SDK Information : $sdk_gen_info"
 
-              # Create the breaking change indicator file
+              # Create the breaking change indicator file and set artifact name
               mkdir -p "$(System.DefaultWorkingDirectory)/out/test"
-              echo "This file indicates potential breaking changes in the Go SDK" > $(System.DefaultWorkingDirectory)/out/test/add_breakingchange-go-sdk
-              fileName=$(basename $(ls $(Build.ArtifactStagingDirectory)/out/test/*.*  | head -n 1))
-              echo "##vso[task.setvariable variable=labelArtifactName]$fileName"
+              ARTIFACT_NAME="add_breaking-change-go-sdk"
+              echo "This file indicates potential breaking changes in the Go SDK" > "$(System.DefaultWorkingDirectory)/out/test/$(ARTIFACT_NAME)"
+
+              # Set the variable for artifact name at runtime
+              echo "##vso[task.setvariable variable=breakingChangeArtifactName]$ARTIFACT_NAME"
+              echo "Breaking change artifact name set to: $ARTIFACT_NAME"
 
               cd $(SpecRepoDirectory)
               npm ci
@@ -205,6 +208,13 @@ extends:
                 --tr true \
                 $optional_params
             displayName: 'Generate SDK'
+
+          - template: /eng/common/pipelines/templates/steps/publish-1es-artifact.yml
+            displayName: 'Publish SDK breaking change label artifact'
+            condition: succeededOrFailed()
+            inputs:
+              targetPath: '$(System.DefaultWorkingDirectory)/out/test'
+              artifactName: '$(breakingChangeArtifactName)'
 
           - task: Powershell@2
             inputs:
