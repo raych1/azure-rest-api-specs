@@ -209,7 +209,7 @@ extends:
           - template: /eng/common/pipelines/templates/steps/publish-1es-artifact.yml
             parameters:
               ArtifactName: $(breakingChangeArtifactName)
-              ArtifactPath: $(System.DefaultWorkingDirectory)/out/test
+              ArtifactPath: "$(System.DefaultWorkingDirectory)/out/test"
 
           - task: Powershell@2
             inputs:
