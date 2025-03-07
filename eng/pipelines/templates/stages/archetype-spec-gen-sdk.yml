@@ -59,6 +59,11 @@ extends:
               condition: ne(variables['ValidationResult'], '')
               artifactName: "spec-gen-sdk-logs"
               targetPath: "$(System.DefaultWorkingDirectory)/out/logs"
+            - output: pipelineArtifact
+              displayName: Publish label file to Pipeline Artifacts
+              condition: ne(variables['ValidationResult'], '')
+              artifactName: $(labelArtifactName)
+              targetPath: "$(System.DefaultWorkingDirectory)/out/test"
 
         steps:
           - checkout: none
@@ -183,11 +188,10 @@ extends:
               echo "Generated SDK Information : $sdk_gen_info"
 
               # Create the breaking change indicator file
-              echo "This file indicates potential breaking changes in the Go SDK" > $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
-              echo "Generated at: $(date)" >> $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
-              echo "Build ID: $(Build.BuildId)" >> $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
-              echo "Repository: ${{ parameters.SpecRepoUrl }}" >> $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk
-              echo "Created breaking change file at: $(System.DefaultWorkingDirectory)/add-breakingchange-go-sdk"
+              mkdir -p "$(System.DefaultWorkingDirectory)/out/test"
+              echo "This file indicates potential breaking changes in the Go SDK" > $(System.DefaultWorkingDirectory)/out/test/add_breakingchange-go-sdk
+              fileName=$(basename $(ls $(Build.ArtifactStagingDirectory)/out/test/*.*  | head -n 1))
+              echo "##vso[task.setvariable variable=labelArtifactName]$fileName"
 
               cd $(SpecRepoDirectory)
               npm ci
