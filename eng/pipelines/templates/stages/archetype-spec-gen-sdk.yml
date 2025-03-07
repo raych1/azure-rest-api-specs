@@ -59,11 +59,6 @@ extends:
               condition: ne(variables['ValidationResult'], '')
               artifactName: "spec-gen-sdk-logs"
               targetPath: "$(System.DefaultWorkingDirectory)/out/logs"
-            - output: pipelineArtifact
-              displayName: Publish breaking change file to Pipeline Artifacts
-              condition: succeededOrFailed()
-              artifactName: "go-sdk-breaking-change-indicator"
-              targetPath: "$(System.DefaultWorkingDirectory)/out/test"
 
         steps:
           - checkout: none
@@ -190,7 +185,9 @@ extends:
               # Create the breaking change indicator file and set artifact name
               mkdir -p "$(System.DefaultWorkingDirectory)/out/test"
               ARTIFACT_NAME="add_breaking-change-go-sdk"
-              echo "This file indicates potential breaking changes in the Go SDK" > "$(System.DefaultWorkingDirectory)/out/test/$(ARTIFACT_NAME)"
+              file_path="$(System.DefaultWorkingDirectory)/out/test/$(ARTIFACT_NAME)"
+              echo "file_path: $file_path"
+              echo "This file indicates potential breaking changes in the Go SDK" > $file_path
 
               # Set the variable for artifact name at runtime
               echo "##vso[task.setvariable variable=breakingChangeArtifactName]$ARTIFACT_NAME"
