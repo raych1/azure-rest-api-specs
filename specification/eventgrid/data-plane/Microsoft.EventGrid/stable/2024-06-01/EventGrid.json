@@ -708,6 +708,10 @@
         "subject": {
           "type": "string",
           "description": "This describes the subject of the event in the context of the event producer (identified by source)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the test)."
         }
       },
       "required": [
