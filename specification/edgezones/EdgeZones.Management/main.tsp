@@ -107,7 +107,7 @@ model ExtendedZoneProperties {
   homeLocation: string;
 }
 
-@doc("Resource that represents an Azure Extended Zone available to a subscription for registering and unregistering.")
+@doc("Resource that represents an Azure Extended Zone available to a subscription for registering and unregistering. Test")
 @subscriptionResource
 model ExtendedZone is ProxyResource<ExtendedZoneProperties> {
   @doc("The name of the ExtendedZone")
