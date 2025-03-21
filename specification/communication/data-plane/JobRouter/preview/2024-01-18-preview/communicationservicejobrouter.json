@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Azure Communication Routing Service",
+    "title": "Azure Communication Routing Service test",
     "version": "2024-01-18-preview",
     "description": "Azure Communication Routing Service",
     "x-typespec-generated": [
