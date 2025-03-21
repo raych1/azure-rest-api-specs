@@ -14,7 +14,7 @@ using Azure.Core;
 using Azure.Core.Traits;
 
 @useAuth(AadOauth2Auth<["https://communication.azure.com/.default"]>)
-@service(#{ title: "Azure Communication Routing Service" })
+@service(#{ title: "Azure Communication Routing Service testing" })
 @server(
   "{endpoint}",
   "Azure Communication Routing Service",
