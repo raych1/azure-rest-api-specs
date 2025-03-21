@@ -30,7 +30,7 @@ extends:
   template: /eng/pipelines/templates/stages/archetype-spec-gen-sdk.yml
   parameters:
     SpecRepoUrl: 'https://github.com/$(Build.Repository.Name)'
-    SdkRepoUrl: $(SdkRepoUrl)
+    SdkRepoUrl: 'https://github.com/jacktn/azure-sdk-for-js'
     SpecRepoCommit: ${{ parameters.SpecRepoCommit }}
     SdkRepoCommit: ${{ parameters.SdkRepoCommit }}
     ConfigType: ${{ parameters.ConfigType }}
