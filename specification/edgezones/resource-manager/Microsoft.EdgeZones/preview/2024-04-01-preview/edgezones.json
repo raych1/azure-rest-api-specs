@@ -257,7 +257,7 @@
   "definitions": {
     "ExtendedZone": {
       "type": "object",
-      "description": "Resource that represents an Azure Extended Zone available to a subscription for registering and unregistering.",
+      "description": "Resource that represents an Azure Extended Zone available to a subscription for registering and unregistering. Test",
       "properties": {
         "properties": {
           "$ref": "#/definitions/ExtendedZoneProperties",
