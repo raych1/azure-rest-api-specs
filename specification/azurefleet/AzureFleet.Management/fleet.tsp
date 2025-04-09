@@ -103,6 +103,11 @@ model FleetProperties {
   @doc("Specifies the ID which uniquely identifies a Compute Fleet.")
   @visibility(Lifecycle.Read)
   uniqueId?: string;
+
+  @added(Versions.v2025_03_01)
+  @doc("Specifies the vnet name which uniquely identifies a Compute Fleet.")
+  @visibility(Lifecycle.Read)
+  vnetName: string;
 }
 
 @doc("Compute Profile to use for running user's workloads.")
