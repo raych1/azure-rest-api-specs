@@ -28,6 +28,6 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const { setSpecGenSdkStatus } =
-              await import('${{ github.workspace }}/.github/workflows/src/spec-gen-sdk-status.js');
-            return await setSpecGenSdkStatus({ github, context, core });
+            const setStatus =
+              (await import('${{ github.workspace }}/.github/workflows/src/spec-gen-sdk-status.js')).default;
+            return await setStatus({ github, context, core });
