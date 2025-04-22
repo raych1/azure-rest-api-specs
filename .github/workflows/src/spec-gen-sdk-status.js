@@ -179,7 +179,6 @@ async function validateArtifactData({
   let description = "spec-gen-sdk checks succeeded";
   for (const checkRun of checkRuns) {
     core.info(`Processing check run: ${checkRun.name} (${checkRun.conclusion})`);
-    core.info(`check run obj: ${JSON.stringify(checkRun)}`);
     // Extract the ADO build ID and project URL from the check run details URL
     const buildUrlRegex = /^(.*?)(?=\/_build\/).*?[?&]buildId=(\d+)/;
     const match = checkRun.details_url.match(buildUrlRegex);
