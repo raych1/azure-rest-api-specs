@@ -200,6 +200,11 @@ async function validateArtifactData({
       core,
     });
     // Parse the JSON data
+    if (!result.artifactData) {
+      throw new Error(
+        `Artifact '${artifactName}' not found in the build with details_url:${checkRun.details_url}`
+      );
+    }
     const artifactJson = JSON.parse(result.artifactData);
     const isDataPlaneSpecPr = artifactJson.dataPlane;
     const language = artifactJson.language;
