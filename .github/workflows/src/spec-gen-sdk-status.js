@@ -189,8 +189,12 @@ async function validateArtifactData({
     }
     const ado_project_url = match[1];
     const ado_build_id = match[2];
-    const artifactName = "spec-gen-sdk-artifact";
+    let artifactName = "spec-gen-sdk-artifact";
     const artifactFileName = `${artifactName}.json`;
+    if (checkRun.conclusion === CheckConclusion.FAILURE) {
+      // hardcode for testing now
+      artifactName = "spec-gen-sdk-artifact-FailedAttempt1";
+    }
     const result = await GetAzurePipelineArtifact({
       ado_build_id,
       ado_project_url,
