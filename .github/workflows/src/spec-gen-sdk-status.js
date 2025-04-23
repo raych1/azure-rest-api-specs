@@ -147,7 +147,7 @@ export const specGenSdkRequiredSettings = {
    customRequired: undefined,
  },
  "azure-sdk-for-js": {
-   managementPlaneRequired: false,
+   managementPlaneRequired: true,
    dataPlaneRequired: false,
    customRequired: undefined,
  },
@@ -157,7 +157,7 @@ export const specGenSdkRequiredSettings = {
    customRequired: undefined,
  },
  "azure-sdk-for-python": {
-   managementPlaneRequired: false,
+   managementPlaneRequired: true,
    dataPlaneRequired: false,
    customRequired: undefined,
  },
