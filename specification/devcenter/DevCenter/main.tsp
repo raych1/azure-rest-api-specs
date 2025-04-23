@@ -19,7 +19,7 @@ using TypeSpec.Http;
     }
   ]>
 )
-@service(#{ title: "DevCenter" })
+@service(#{ title: "DevCenter testing" })
 @server(
   "{endpoint}",
   "DevCenter service",
