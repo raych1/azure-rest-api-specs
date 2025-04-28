@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Azure Load Testing",
+    "title": "Azure Load Testing testing",
     "version": "2023-04-01-preview",
     "description": "These APIs allow end users to create, view and run load tests using Azure Load Test Service.",
     "x-typespec-generated": [
