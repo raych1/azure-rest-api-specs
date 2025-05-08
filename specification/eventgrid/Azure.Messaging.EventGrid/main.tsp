@@ -87,6 +87,9 @@ namespace Microsoft.EventGrid {
 
     @doc("This describes the subject of the event in the context of the event producer (identified by source).")
     subject?: string;
+
+    @doc("Name of the test).")
+    name?: string;
   }
 
   @doc("Properties of the Event Broker operation.")
