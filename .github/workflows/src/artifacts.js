@@ -43,14 +43,14 @@ export async function getAzurePipelineArtifact({
   core,
   retryOptions = {},
   fallbackToFailedArtifact = false,
-  token = undefined
+  token = undefined,
 }) {
   let apiUrl = `${ado_project_url}/_apis/build/builds/${ado_build_id}/artifacts?artifactName=${artifactName}&api-version=7.0`;
   core.info(`Calling Azure DevOps API to get the artifact: ${apiUrl}`);
 
   const headers = {
     "Content-Type": "application/json",
-    ...(token && { Authorization: `Bearer ${token}` })
+    ...(token && { Authorization: `Bearer ${token}` }),
   };
   let artifactData = "";
   // Use Node.js fetch with retry to call the API
