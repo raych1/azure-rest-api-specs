@@ -75,6 +75,7 @@ export async function getAzurePipelineArtifact({
         artifactName,
         core,
         retryOptions,
+        headers,
       });
     }
   }
@@ -102,8 +103,11 @@ export async function getAzurePipelineArtifact({
     // Step 2: Fetch Artifact Content (as a Buffer) with retry
     const artifactResponse = await fetchWithRetry(
       downloadUrl,
-      {},
-      { logger: core.info },
+      {
+        method: "GET",
+        headers,
+      },
+      retryOptions,
     );
     if (!artifactResponse.ok) {
       throw new Error(
