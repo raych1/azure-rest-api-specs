@@ -32,22 +32,16 @@ jobs:
             echo "has_creds=false" >> $GITHUB_OUTPUT
           fi
 
-      # Then use the output variable in the conditional for the Azure login step
-      - name: Azure Login with Workload Identity Federation
-        if: steps.check-creds.outputs.has_creds == 'true'
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        run: |
-          echo "Logging in with az CLI"
-          az login --service-principal \
-            --username $AZURE_CLIENT_ID \
-            --tenant $AZURE_TENANT_ID \
-            --allow-no-subscriptions
+      - if: steps.check-creds.outputs.has_creds == 'true'
+        name: Azure Login with Workload Identity Federation
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          allow-no-subscriptions: true
 
-      # Also use the same output variable for ADO token step
-      - name: Get ADO Token via Managed Identity
-        if: steps.check-creds.outputs.has_creds == 'true'
+      - if: steps.check-creds.outputs.has_creds == 'true'
+        name: Get ADO Token via Managed Identity
         run: |
           # Get token for Azure DevOps resource
           ADO_TOKEN=$(az account get-access-token --resource "499b84ac-1321-427f-aa17-267ca6975798" --query "accessToken" -o tsv)
