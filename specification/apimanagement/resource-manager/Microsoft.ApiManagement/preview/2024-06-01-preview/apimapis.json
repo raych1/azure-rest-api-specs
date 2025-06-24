@@ -704,7 +704,7 @@
                 "type": "string"
               }
             }
-          }
+          },
           "200": {
             "description": "Release was successfully updated.",
             "schema": {
