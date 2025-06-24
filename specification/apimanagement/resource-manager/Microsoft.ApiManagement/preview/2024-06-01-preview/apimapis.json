@@ -77,13 +77,6 @@
             "description": "Include tags in the response."
           },
           {
-            "name": "expandApiVersionSet",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "description": "Include full ApiVersionSet resource in response"
-          },
-          {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
@@ -416,74 +409,7 @@
             }
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "Api"
-        ],
-        "operationId": "Api_Delete",
-        "description": "Deletes the specified API of the API Management service instance.",
-        "x-ms-examples": {
-          "ApiManagementDeleteApi": {
-            "$ref": "./examples/ApiManagementDeleteApi.json"
-          }
-        },
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "./apimanagement.json#/parameters/ServiceNameParameter"
-          },
-          {
-            "$ref": "./apimanagement.json#/parameters/ApiIdRevParameter"
-          },
-          {
-            "name": "deleteRevisions",
-            "in": "query",
-            "required": false,
-            "type": "boolean",
-            "description": "Delete all revisions of the Api."
-          },
-          {
-            "$ref": "./apimanagement.json#/parameters/IfMatchRequiredParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "The API was scheduled for deletion.",
-            "headers": {
-              "location": {
-                "description": "Location header",
-                "type": "string"
-              },
-              "Azure-AsyncOperation": {
-                "description": "Azure-AsyncOperation header contains the URL where the status of the long running operation can be checked",
-                "type": "string"
-              }
-            }
-          },
-          "204": {
-            "description": "The API was successfully deleted."
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-ms-long-running-operation": true,
-        "x-ms-long-running-operation-options": {
-          "final-state-via": "location"
-        }
-      }
+      }      
     },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}/revisions": {
       "get": {
@@ -767,6 +693,18 @@
               }
             }
           },
+          "202": {
+            "description": "Release was successfully created.",
+            "schema": {
+              "$ref": "./definitions.json#/definitions/ApiReleaseContract"
+            },
+            "headers": {
+              "ETag": {
+                "description": "Current entity state version. Should be treated as opaque and used to make conditional HTTP requests.",
+                "type": "string"
+              }
+            }
+          }
           "200": {
             "description": "Release was successfully updated.",
             "schema": {
