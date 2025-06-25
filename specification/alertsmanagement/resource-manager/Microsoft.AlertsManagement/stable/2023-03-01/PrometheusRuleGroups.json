@@ -3,7 +3,7 @@
   "info": {
     "version": "2023-03-01",
     "title": "Azure Alerts Management Service Resource Provider",
-    "description": "Azure Alerts Management Service provides a single pane of glass of alerts across Azure Monitor."
+    "description": "Azure Alerts Management Service provides a single pane of glass of alerts across Azure Monitor test."
   },
   "host": "management.azure.com",
   "schemes": [
