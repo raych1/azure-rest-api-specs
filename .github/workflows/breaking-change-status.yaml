@@ -1,4 +1,4 @@
-name: "[TEST-IGNORE] Swagger BreakingChange - Set Status"
+name: "[TEST-IGNORE] Swagger BreakingChange Status"
 
 on:
   # Must run on pull_request_target instead of pull_request, since the latter cannot trigger on
@@ -31,5 +31,5 @@ jobs:
     uses: ./.github/workflows/_reusable-set-check-status.yml
     with:
       monitored_workflow_name: "[TEST-IGNORE] Swagger BreakingChange - Analyze Code"
-      required_check_name: "[TEST-IGNORE] Swagger BreakingChange"
+      required_check_name: "[TEST-IGNORE] Swagger BreakingChange Status"
       overriding_label: "BreakingChange-Approved-Benign,BreakingChange-Approved-BugFix,BreakingChange-Approved-UserImpact,BreakingChange-Approved-BranchPolicyException,BreakingChange-Approved-Previously,BreakingChange-Approved-Security"
