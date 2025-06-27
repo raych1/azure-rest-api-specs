@@ -34,12 +34,12 @@
         ],
         "description": "Retrieve Prometheus all rule group definitions in a subscription.",
         "operationId": "PrometheusRuleGroups_ListBySubscription",
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
-          },
+        "parameters": [          
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/SubscriptionIdParameter"
           }
         ],
         "responses": {
@@ -47,12 +47,6 @@
             "description": "Successful request for a list of Prometheus rule groups",
             "schema": {
               "$ref": "#/definitions/PrometheusRuleGroupResourceCollection"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v3/types.json#/definitions/ErrorResponse"
             }
           }
         },
