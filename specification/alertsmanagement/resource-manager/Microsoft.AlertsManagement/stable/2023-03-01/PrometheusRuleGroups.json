@@ -34,7 +34,7 @@
         ],
         "description": "Retrieve Prometheus all rule group definitions in a subscription.",
         "operationId": "PrometheusRuleGroups_ListBySubscription",
-        "parameters": [          
+        "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
@@ -73,9 +73,6 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           }
         ],
         "responses": {
