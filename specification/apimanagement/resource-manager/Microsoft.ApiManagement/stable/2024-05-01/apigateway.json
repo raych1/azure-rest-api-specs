@@ -54,9 +54,6 @@
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
-            "$ref": "./apimanagement.json#/parameters/GatewayNameParameter"
-          },
-          {
             "name": "parameters",
             "in": "body",
             "required": true,
