@@ -100,11 +100,6 @@
         ],
         "operationId": "Backend_GetEntityTag",
         "description": "Gets the entity state (Etag) version of the backend specified by its identifier.",
-        "x-ms-examples": {
-          "ApiManagementHeadBackend": {
-            "$ref": "./examples/ApiManagementHeadBackend.json"
-          }
-        },
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
@@ -113,13 +108,13 @@
             "$ref": "./apimanagement.json#/parameters/ServiceNameParameter"
           },
           {
-            "$ref": "./apimanagement.json#/parameters/BackendIdParameter"
-          },
-          {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ApiVersionParameter"
           },
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },          
+          {
+            "$ref": "./apimanagement.json#/parameters/BackendIdParameter"
           }
         ],
         "responses": {
