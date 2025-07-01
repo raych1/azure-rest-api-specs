@@ -100,11 +100,6 @@
         ],
         "operationId": "ApiGateway_Update",
         "description": "Updates an existing API Management gateway.",
-        "x-ms-examples": {
-          "ApiManagementUpdateStandardGateway": {
-            "$ref": "./examples/ApiManagementUpdateStandardGateway.json"
-          }
-        },
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
@@ -164,10 +159,7 @@
             "$ref": "./examples/ApiManagementGatewayGetGateway.json"
           }
         },
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
-          },
+        "parameters": [          
           {
             "$ref": "./apimanagement.json#/parameters/GatewayNameParameter"
           },
@@ -176,6 +168,9 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
           }
         ],
         "responses": {
