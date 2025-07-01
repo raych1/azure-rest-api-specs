@@ -49,12 +49,12 @@
             "$ref": "./examples/ApiManagementCreateWorkspacePremiumGateway.json"
           }
         },
-        "parameters": [
-          {
-            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
-          },
+        "parameters": [          
           {
             "$ref": "./apimanagement.json#/parameters/GatewayNameParameter"
+          },
+          {
+            "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
           },
           {
             "name": "parameters",
