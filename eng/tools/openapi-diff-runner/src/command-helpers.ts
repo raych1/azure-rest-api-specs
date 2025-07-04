@@ -12,6 +12,7 @@ import { getArgumentValue } from "./utils/common-utils.js";
 import { createOadMessageProcessor } from "./utils/oad-message-processor.js";
 import { createPullRequestProperties } from "./utils/pull-request.js";
 import { getChangedFilesStatuses, swagger } from "@azure-tools/specs-shared/changed-files";
+import { BREAKING_CHANGES_CHECK_TYPES } from "@azure-tools/specs-shared/breaking-change";
 import { logMessage, setOutput } from "./log.js";
 
 /**
@@ -265,7 +266,7 @@ export function cleanDummySwagger(): void {
  * Return true if the type indicates the same version breaking change
  */
 export function isSameVersionBreakingType(type: BreakingChangesCheckType): boolean {
-  return type === "SameVersion";
+  return type === BREAKING_CHANGES_CHECK_TYPES.SAME_VERSION;
 }
 
 /**

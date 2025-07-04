@@ -16,8 +16,9 @@ import { createOadTrace, setOadBaseBranch, generateOadMarkdown } from "./types/o
 import {
   createBreakingChangeDetectionContext,
   checkBreakingChangeOnSameVersion,
+  checkCrossVersionBreakingChange,
 } from "./detect-breaking-change.js";
-import { BreakingChangesCheckType, Context } from "./types/breaking-change.js";
+import { Context } from "./types/breaking-change.js";
 import {
   getSwaggerDiffs,
   changeBaseBranch,
@@ -31,6 +32,7 @@ import {
 import { generateBreakingChangeResultSummary } from "./generate-report.js";
 import { LOG_PREFIX, logMessage } from "./log.js";
 import { appendMarkdownToLog } from "./utils/oad-message-processor.js";
+import { BREAKING_CHANGES_CHECK_TYPES } from "@azure-tools/specs-shared/breaking-change";
 
 /**
  * The function validateBreakingChange() is executed with type SameVersion or CrossVersion, by
@@ -102,15 +104,20 @@ export async function validateBreakingChange(context: Context): Promise<number> 
     existsSync(path.join(context.prInfo!.workingDir, f)),
   );
 
+  // new swaggers in the new version folder
   const newVersionSwaggers = newSwaggers.filter(
     (f: string) => !newExistingVersionDirs.includes(path.dirname(f)),
   );
-  const nonExistingChangedSwaggers = changedSwaggers.filter(
+  // new swaggers in the new version folder that have changed
+  const newVersionChangedSwaggers = changedSwaggers.filter(
     (f: string) => !existsSync(path.join(context.prInfo!.workingDir, f)),
   );
+  // existing swaggers that have changed
   const existingChangedSwaggers = changedSwaggers.filter(
-    (f: string) => !nonExistingChangedSwaggers.includes(f),
+    (f: string) => !newVersionChangedSwaggers.includes(f),
   );
+  // swaggers that are in the existing version directories that have changed or deleted or
+  // newly added in the existing version directories
   const needCompareOldSwaggers = existingChangedSwaggers
     .concat(newExistingVersionSwaggers)
     .concat(needCompareDeletedSwaggers);
@@ -125,7 +132,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
   logMessage(JSON.stringify(existingChangedSwaggers, null, 2));
 
   logMessage("The following changed swaggers are not existed in base branch:");
-  logMessage(JSON.stringify(nonExistingChangedSwaggers, null, 2));
+  logMessage(JSON.stringify(newVersionChangedSwaggers, null, 2));
 
   logMessage("The following are deleted swaggers that need to do the comparison: ");
   logMessage(JSON.stringify(needCompareDeletedSwaggers, null, 2));
@@ -160,6 +167,8 @@ export async function validateBreakingChange(context: Context): Promise<number> 
     const detectionContext = createBreakingChangeDetectionContext(
       context,
       needCompareOldSwaggers,
+      newVersionSwaggers,
+      newVersionChangedSwaggers,
       oadTracer,
     );
 
@@ -168,12 +177,13 @@ export async function validateBreakingChange(context: Context): Promise<number> 
     let oadViolationsCnt: number = 0;
     let errorCnt: number = 0;
 
-    let comparisonType: BreakingChangesCheckType = isSameVersionBreakingType(context.runType)
-      ? "SameVersion"
-      : "CrossVersion";
-
-    ({ msgs, runtimeErrors, oadViolationsCnt, errorCnt } =
-      await checkBreakingChangeOnSameVersion(detectionContext));
+    if (context.runType === BREAKING_CHANGES_CHECK_TYPES.SAME_VERSION) {
+      ({ msgs, runtimeErrors, oadViolationsCnt, errorCnt } =
+        await checkBreakingChangeOnSameVersion(detectionContext));
+    } else {
+      ({ msgs, runtimeErrors, oadViolationsCnt, errorCnt } =
+        await checkCrossVersionBreakingChange(detectionContext));
+    }
     const comparedSpecsTableContent = generateOadMarkdown(detectionContext.oadTracer);
 
     // Log the markdown content to the pipeline log file
@@ -209,7 +219,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
 
     logMessage(
       `${LOG_PREFIX}validateBreakingChange: prUrl: ${context.prUrl}, ` +
-        `comparisonType: ${comparisonType}, labelsAddedCount: , ` +
+        `comparisonType: ${context.runType}, labelsAddedCount: , ` +
         `errorCnt: ${errorCnt}, oadViolationsCnt: ${oadViolationsCnt}, ` +
         `process.exitCode: ${process.exitCode}`,
     );
@@ -220,7 +230,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
       logMessage(
         `${LOG_PREFIX}validateBreakingChange: ` +
           `Prevented spurious failure of breaking change check. prUrl: ${context.prUrl}, ` +
-          `comparisonType: ${comparisonType}, oadViolationsCnt: ${oadViolationsCnt}, ` +
+          `comparisonType: ${context.runType}, oadViolationsCnt: ${oadViolationsCnt}, ` +
           `process.exitCode: ${process.exitCode}.`,
       );
     }
