@@ -205,3 +205,26 @@ export function specIsPreview(specPath: string): boolean {
   // Example input value: specification/maps/data-plane/Creator/preview/2022-09-01-preview/wayfind.json
   return specPath.includes("/preview/") && !specPath.includes("/stable/");
 }
+
+export function convertRawErrorToUnifiedMsg(
+  errType: string,
+  errorMsg: string,
+  levelType = "Error",
+  location: string | undefined = undefined,
+): string {
+  const extra: { [index: string]: string } = {};
+  extra.details = errorMsg;
+  if (location) {
+    extra.location = targetBranchHref(location);
+  }
+  const result = {
+    type: "Raw",
+    level: levelType,
+    message: errType,
+    time: new Date(),
+    extra: {
+      ...extra,
+    },
+  };
+  return JSON.stringify(result);
+}
