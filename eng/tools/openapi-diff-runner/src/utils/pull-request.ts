@@ -134,6 +134,7 @@ export const createPullRequestProperties = async (
     await workingGitRepository.fetch("origin", `${baseBranch}`);
   }
   await workingGitRepository.checkout(context.prTargetBranch);
+  logMessage(`Current working directory: ${process.cwd()}`);
 
   return {
     baseBranch: context.prTargetBranch,
@@ -143,7 +144,9 @@ export const createPullRequestProperties = async (
     checkout: async function (this: any, branch: string) {
       if (this.currentBranch !== branch) {
         await workingGitRepository.checkout([branch]);
-        logMessage(`checkout to ${branch} in ${tempRepoFolder}`);
+        logMessage(
+          `checkout to ${branch} in ${tempRepoFolder}\n Current working directory: ${process.cwd()}`,
+        );
         this.currentBranch = branch;
       }
     },

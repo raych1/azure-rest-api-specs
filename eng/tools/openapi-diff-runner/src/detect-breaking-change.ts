@@ -118,13 +118,13 @@ export async function checkBreakingChangeOnSameVersion(
   let aggregateOadViolationsCnt = 0;
   let aggregateErrorCnt = 0;
 
-  for (const swaggerJson of detectionContext.existingVersionSwaggers) {
+  for (const swaggerPath of detectionContext.existingVersionSwaggers) {
     const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
       detectionContext,
-      path.resolve(detectionContext.context.prInfo!.tempRepoFolder, swaggerJson),
-      swaggerJson,
+      path.resolve(detectionContext.context.prInfo!.tempRepoFolder, swaggerPath),
+      swaggerPath,
       BREAKING_CHANGES_CHECK_TYPES.SAME_VERSION,
-      specIsPreview(swaggerJson) ? "preview" : "stable",
+      specIsPreview(swaggerPath) ? "preview" : "stable",
     );
     aggregateOadViolationsCnt += oadViolationsCnt;
     aggregateErrorCnt += errorCnt;
