@@ -11,7 +11,7 @@
 
 import { RawMessageRecord, ResultMessageRecord } from "./types/message.js";
 import { existsSync } from "node:fs";
-import * as path from "path";
+import * as path from "node:path";
 import { createOadTrace, setOadBaseBranch, generateOadMarkdown } from "./types/oad-types.js";
 import {
   createBreakingChangeDetectionContext,

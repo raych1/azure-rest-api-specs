@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import {
   convertOadMessagesToResultMessageRecords,
   createOadMessageProcessor,
@@ -17,7 +17,7 @@ import { MessageLevel } from "../../src/types/message.js";
 import { logMessage } from "../../src/log.js";
 
 // Mock dependencies
-vi.mock("fs");
+vi.mock("node:fs");
 vi.mock("../../src/log.js");
 vi.mock("../../src/utils/common-utils.js", () => ({
   sourceBranchHref: vi.fn(

@@ -8,15 +8,15 @@
  * - "[Breaking Change][PR Workflow] Use more granular labels for Breaking Changes approvals"
  *   https://github.com/Azure/azure-sdk-tools/issues/6374
  */
-import { basename } from "path";
+import { basename } from "node:path";
 import { getVersionFromInputFile, specificBranchHref } from "../utils/common-utils.js";
 import { MessageLevel } from "./message.js";
 import { sourceBranchHref } from "../utils/common-utils.js";
 import { ApiVersionLifecycleStage, Context } from "./breaking-change.js";
 import { defaultBreakingChangeBaseBranch } from "../command-helpers.js";
-import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

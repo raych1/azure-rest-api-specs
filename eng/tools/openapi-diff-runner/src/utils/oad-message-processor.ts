@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import { OadMessage } from "../types/oad-types.js";
 import { JsonPath, MessageLevel, ResultMessageRecord } from "../types/message.js";
 import { sourceBranchHref, specificBranchHref } from "./common-utils.js";

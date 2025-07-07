@@ -20,7 +20,7 @@ import {
   specIsPreview,
 } from "./utils/common-utils.js";
 import { appendFileSync } from "node:fs";
-import * as path from "path";
+import * as path from "node:path";
 import { applyRules } from "./utils/apply-rules.js";
 import { OadMessage, OadTraceData, addOadTrace } from "./types/oad-types.js";
 import { runOad } from "./run-oad.js";
@@ -31,7 +31,7 @@ import {
   SpecModel,
   getExistedVersionOperations,
   getPrecedingSwaggers,
-} from "@azure-tools/spec-shared/spec-model";
+} from "@azure-tools/specs-shared/spec-model";
 
 // We want to display some lines as we improved AutoRest v2 error output since March 2024 to provide multi-line error messages, e.g.:
 // https://github.com/Azure/autorest/pull/4934

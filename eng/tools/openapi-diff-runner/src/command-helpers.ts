@@ -31,7 +31,7 @@ export function initContext(): Context {
   const swaggerDirs: string[] = ["specification", "dev"];
   const repo: string = getArgumentValue(args, "--repo", "azure/azure-rest-api-specs");
   const prNumber: string = getArgumentValue(args, "--number", "");
-  const runType = getArgumentValue(args, "--rt", "SameVersion") as BreakingChangesCheckType;
+  const runType = getArgumentValue(args, "--rt", BREAKING_CHANGES_CHECK_TYPES.SAME_VERSION) as BreakingChangesCheckType;
   const workingFolder: string = path.join(localSpecRepoPath, "..");
   const logFileFolder: string = path.join(workingFolder, "out/logs");
 
@@ -68,7 +68,7 @@ export function initContext(): Context {
 export const BreakingChangeLabelsToBeAdded = new Set<string>();
 export let defaultBreakingChangeBaseBranch = "main";
 function getBreakingChangeCheckName(runType: BreakingChangesCheckType): string {
-  return runType === "SameVersion" ? "Swagger BreakingChange" : "BreakingChange(Cross-Version)";
+  return runType === BREAKING_CHANGES_CHECK_TYPES.SAME_VERSION ? "Swagger BreakingChange" : "BreakingChange(Cross-Version)";
 }
 
 /**

@@ -394,7 +394,7 @@ describe("common-utils", () => {
   describe("convertRawErrorToUnifiedMsg", () => {
     beforeEach(() => {
       process.env.GITHUB_ACTIONS = "true";
-      process.env.GITHUB_BASE_REPOSITORY = "owner/repo";
+      process.env.GITHUB_REPOSITORY = "owner/repo";
       process.env.GITHUB_BASE_REF = "main";
     });
 

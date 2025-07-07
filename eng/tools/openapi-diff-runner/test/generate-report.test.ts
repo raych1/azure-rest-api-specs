@@ -9,6 +9,7 @@ import {
   reportToString,
   sortBreakingChangeMdReports,
 } from "../src/utils/markdown-report.js";
+import { BREAKING_CHANGES_CHECK_TYPES } from "@azure-tools/specs-shared/breaking-change";
 
 // Mock dependencies
 vi.mock("../src/log.js");
@@ -53,7 +54,7 @@ describe("generate-report", () => {
     swaggerDirs: ["specification"],
     baseBranch: "main",
     headCommit: "HEAD",
-    runType: "SameVersion",
+    runType: BREAKING_CHANGES_CHECK_TYPES.SAME_VERSION,
     checkName: "Swagger BreakingChange",
     repo: "test/repo",
     prNumber: "123",
