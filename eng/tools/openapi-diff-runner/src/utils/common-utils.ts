@@ -5,8 +5,11 @@ import { logMessage } from "../log.js";
 export function blobHref(file: unknown): string {
   // GitHub Actions scenario
   if (process.env.GITHUB_ACTIONS) {
+    // GITHUB_HEAD_REPOSITORY is only available for pull requests from forked repositories.
+    // GITHUB_REPOSITORY is the repository where the workflow is running.
     const repoName = process.env.GITHUB_HEAD_REPOSITORY || process.env.GITHUB_REPOSITORY;
-    const sha = process.env.GITHUB_SHA || process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA;
+    // GITHUB_EVENT_PULL_REQUEST_HEAD_SHA is the pull request head commit SHA and GITHUB_SHA is the merge commit SHA
+    const sha = process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA || process.env.GITHUB_SHA;
     return `https://github.com/${repoName}/blob/${sha}/${file}`;
   }
 
