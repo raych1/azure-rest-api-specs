@@ -32,7 +32,7 @@ export type PullRequestProperties = {
    * Working folder for a cloned directory. We can't switch branches in the original Git repository
    * so we use cloned repository.
    */
-  readonly workingDir: string;
+  readonly tempRepoFolder: string;
 
   /**
    * Checkout Git branch, for example, it can be `targetBranch` or `sourceBranch`.
@@ -101,13 +101,13 @@ export const createPullRequestProperties = async (
   // we have to clone the repository because we need to switch branches.
   // Switching branches in the current repository can be dangerous because Avocado
   // may be running from it.
-  const workingDir = path.resolve(
+  const tempRepoFolder = path.resolve(
     path.join(process.cwd(), "..", `${prefix}-c93b354fd9c14905bb574a8834c4d69b`),
   );
-  if (!existsSync(workingDir)) {
-    mkdirSync(workingDir);
+  if (!existsSync(tempRepoFolder)) {
+    mkdirSync(tempRepoFolder);
   }
-  const workingGitRepository = simpleGit({ ...options, baseDir: workingDir });
+  const workingGitRepository = simpleGit({ ...options, baseDir: tempRepoFolder });
   await workingGitRepository.init();
 
   // Check if origin remote already exists, if not add it
@@ -139,11 +139,11 @@ export const createPullRequestProperties = async (
     baseBranch: context.prTargetBranch,
     targetBranch: context.prTargetBranch,
     sourceBranch,
-    workingDir,
+    tempRepoFolder,
     checkout: async function (this: any, branch: string) {
       if (this.currentBranch !== branch) {
         await workingGitRepository.checkout([branch]);
-        logMessage(`checkout to ${branch} in ${workingDir}`);
+        logMessage(`checkout to ${branch} in ${tempRepoFolder}`);
         this.currentBranch = branch;
       }
     },

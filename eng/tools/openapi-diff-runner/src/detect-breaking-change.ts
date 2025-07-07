@@ -1,7 +1,20 @@
 /**
  * By design, the members exported from this file are functional breaking change detection utilities.
  *
- * In the "breakingChanges directory invocation depth" this file has depth 2,
+ * In the "breakingChanges directory invocation depth" this fil    if (previousSt    if (previousPreview) {
+      const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
+        detectionContext,
+        path.resolve(detectionContext.context.prInfo!.tempRepoFolder, swaggerPath),
+        swaggerPath,
+        BREAKING_CHANGES_CHECK_TYPES.CROSS_VERSION,
+        "preview",
+      );      const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
+        detectionContext,
+        path.resolve(detectionContext.context.prInfo!.tempRepoFolder, swaggerPath),
+        swaggerPath,
+        BREAKING_CHANGES_CHECK_TYPES.CROSS_VERSION,
+        "stable",
+      );pth 2,
  * i.e. it is invoked by files with depth 1 and invokes files with depth 3.
  */
 import {
@@ -108,7 +121,7 @@ export async function checkBreakingChangeOnSameVersion(
   for (const swaggerJson of detectionContext.existingVersionSwaggers) {
     const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
       detectionContext,
-      path.resolve(detectionContext.context.prInfo!.workingDir, swaggerJson),
+      path.resolve(detectionContext.context.prInfo!.tempRepoFolder, swaggerJson),
       swaggerJson,
       BREAKING_CHANGES_CHECK_TYPES.SAME_VERSION,
       specIsPreview(swaggerJson) ? "preview" : "stable",
@@ -173,7 +186,7 @@ export async function checkCrossVersionBreakingChange(
     if (previousStableSwaggerPath) {
       const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
         detectionContext,
-        path.resolve(detectionContext.context.prInfo!.workingDir, previousStableSwaggerPath),
+        path.resolve(detectionContext.context.prInfo!.tempRepoFolder, previousStableSwaggerPath),
         swaggerPath,
         BREAKING_CHANGES_CHECK_TYPES.CROSS_VERSION,
         "stable",
@@ -184,7 +197,7 @@ export async function checkCrossVersionBreakingChange(
     if (previousPreviewSwaggerPath) {
       const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
         detectionContext,
-        path.resolve(detectionContext.context.prInfo!.workingDir, previousPreviewSwaggerPath),
+        path.resolve(detectionContext.context.prInfo!.tempRepoFolder, previousPreviewSwaggerPath),
         swaggerPath,
         BREAKING_CHANGES_CHECK_TYPES.CROSS_VERSION,
         "preview",
@@ -263,9 +276,8 @@ export async function doBreakingChangeDetection(
   let errorCnt = 0;
 
   try {
-    // await detectionContext.context.prInfo!.checkout(detectionContext.context.prInfo!.baseBranch);
     const oadMessages = await runOad(
-      path.resolve(detectionContext.context.localSpecRepoPath, oldSpec),
+      path.resolve(detectionContext.context.prInfo!.tempRepoFolder, oldSpec),
       newSpec,
     );
 
@@ -304,7 +316,7 @@ export async function doBreakingChangeDetection(
         new: blobHref(getRelativeSwaggerPathToRepo(newSpec)),
         old: branchHref(
           getRelativeSwaggerPathToRepo(
-            path.resolve(detectionContext.context.localSpecRepoPath, oldSpec),
+            path.resolve(detectionContext.context.prInfo!.tempRepoFolder, oldSpec),
           ),
           detectionContext.context.baseBranch,
         ),

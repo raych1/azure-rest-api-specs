@@ -92,7 +92,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
   const addedVersionDirs = [...newSwaggers.map((f: string) => path.dirname(f))];
 
   for (const f of addedVersionDirs) {
-    if (existsSync(path.join(context.prInfo!.workingDir, f))) {
+    if (existsSync(path.join(context.prInfo!.tempRepoFolder, f))) {
       newExistingVersionDirs.push(f);
     }
   }
@@ -101,7 +101,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
     newExistingVersionDirs.includes(path.dirname(f)),
   );
   const needCompareDeletedSwaggers: string[] = deletedSwaggers.filter((f: string) =>
-    existsSync(path.join(context.prInfo!.workingDir, f)),
+    existsSync(path.join(context.prInfo!.tempRepoFolder, f)),
   );
 
   // new swaggers in the new version folder
@@ -110,7 +110,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
   );
   // new swaggers in the new version folder that have changed
   const newVersionChangedSwaggers = changedSwaggers.filter(
-    (f: string) => !existsSync(path.join(context.prInfo!.workingDir, f)),
+    (f: string) => !existsSync(path.join(context.prInfo!.tempRepoFolder, f)),
   );
   // existing swaggers that have changed
   const existingChangedSwaggers = changedSwaggers.filter(
@@ -143,7 +143,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
 
   // create a dummy file to compare. if the deleted file exists in base branch
   for (const f of needCompareDeletedSwaggers) {
-    const baseFilePath = path.join(context.prInfo!.workingDir, f);
+    const baseFilePath = path.join(context.prInfo!.tempRepoFolder, f);
     if (isSameVersionBreakingType(context.runType)) {
       createDummySwagger(baseFilePath, path.resolve(f));
     }
@@ -156,7 +156,7 @@ export async function validateBreakingChange(context: Context): Promise<number> 
 
   // create dummy swagger for new swaggers whose api version already existed before the PR.
   newExistingVersionSwaggers.forEach((f: string) => {
-    const oldSwagger = path.join(context.prInfo!.workingDir, f);
+    const oldSwagger = path.join(context.prInfo!.tempRepoFolder, f);
     if (isSameVersionBreakingType(context.runType)) {
       createDummySwagger(path.resolve(f), oldSwagger);
     }

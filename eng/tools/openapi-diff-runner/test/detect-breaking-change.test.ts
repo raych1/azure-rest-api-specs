@@ -69,7 +69,7 @@ describe("detect-breaking-change", () => {
 
     mockContext = {
       prInfo: {
-        workingDir: "/test/working/dir",
+        tempRepoFolder: "/test/working/dir",
         baseBranch: "main",
         checkout: vi.fn(),
       },
