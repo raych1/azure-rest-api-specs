@@ -19,10 +19,10 @@ jobs:
       - name: Setup Node and install deps
         uses: ./.github/actions/setup-node-install-deps
 
-      - name: Setup .NET 9 SDK
+      - name: Setup .NET 6 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.x"
+          dotnet-version: "6.0.x"
 
       - name: Breaking Change(Cross-Version) - Analyze Code
         id: breaking-change-cross-version-analyze-code
