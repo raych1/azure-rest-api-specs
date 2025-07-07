@@ -153,21 +153,27 @@ export async function checkCrossVersionBreakingChange(
   for (const swaggerPath of detectionContext.newVersionSwaggers
     .concat(detectionContext.newVersionChangedSwaggers)
     .concat(detectionContext.existingVersionSwaggers.filter(isInDevFolder))) {
-    const specModel = await getSpecModel(swaggerPath);
+    // use the detectionContext.context.localSpecRepoPath to resolve the absolute path as it's the merge commit working directory
+    const absoluteSwaggerPath = path.resolve(
+      detectionContext.context.localSpecRepoPath,
+      swaggerPath,
+    );
+    logMessage(`checkCrossVersionBreakingChange: absoluteSwaggerPath: ${absoluteSwaggerPath}`);
+    const specModel = await getSpecModel(absoluteSwaggerPath);
     const availableSwaggers = await specModel.getSwaggers();
     logMessage(
       `checkCrossVersionBreakingChange: swaggerPath: ${swaggerPath}, availableSwaggers.length: ${availableSwaggers?.length}`,
     );
-    const previousVersions = await getPrecedingSwaggers(swaggerPath, availableSwaggers);
+    const previousVersions = await getPrecedingSwaggers(absoluteSwaggerPath, availableSwaggers);
     logMessage(
       `checkCrossVersionBreakingChange: previousVersions: ${JSON.stringify(previousVersions)}`,
     );
-    const previousStable = previousVersions.stable;
-    const previousPreview = previousVersions.preview;
-    if (previousStable) {
+    const previousStableSwaggerPath = previousVersions.stable;
+    const previousPreviewSwaggerPath = previousVersions.preview;
+    if (previousStableSwaggerPath) {
       const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
         detectionContext,
-        path.resolve(detectionContext.context.prInfo!.workingDir, swaggerPath),
+        path.resolve(detectionContext.context.prInfo!.workingDir, previousStableSwaggerPath),
         swaggerPath,
         BREAKING_CHANGES_CHECK_TYPES.CROSS_VERSION,
         "stable",
@@ -175,10 +181,10 @@ export async function checkCrossVersionBreakingChange(
       aggregateOadViolationsCnt += oadViolationsCnt;
       aggregateErrorCnt += errorCnt;
     }
-    if (previousPreview) {
+    if (previousPreviewSwaggerPath) {
       const { oadViolationsCnt, errorCnt } = await doBreakingChangeDetection(
         detectionContext,
-        path.resolve(detectionContext.context.prInfo!.workingDir, swaggerPath),
+        path.resolve(detectionContext.context.prInfo!.workingDir, previousPreviewSwaggerPath),
         swaggerPath,
         BREAKING_CHANGES_CHECK_TYPES.CROSS_VERSION,
         "preview",
@@ -200,8 +206,8 @@ export async function checkCrossVersionBreakingChange(
       // to applyRules.ts / applyRule() function downgrading the severity of all "Error" messages.
       aggregateOadViolationsCnt += oadViolationsCnt;
     }
-    if (!previousPreview && !previousStable) {
-      await checkAPIsBeingMovedToANewSpec(swaggerPath, availableSwaggers);
+    if (!previousStableSwaggerPath && !previousPreviewSwaggerPath) {
+      await checkAPIsBeingMovedToANewSpec(absoluteSwaggerPath, availableSwaggers);
     }
   }
   logMessage(
