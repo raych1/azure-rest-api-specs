@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Microsoft.ServiceLinker",
+    "title": "Microsoft.ServiceLinker test",
     "description": "Microsoft.ServiceLinker provider",
     "version": "2025-05-01"
   },
