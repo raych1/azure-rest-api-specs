@@ -11,7 +11,11 @@ import {
   type BreakingChangeDetectionContext,
 } from "../src/detect-breaking-change.js";
 import { Context } from "../src/types/breaking-change.js";
-import { SpecModel, getExistedVersionOperations, getPrecedingSwaggers } from "@azure-tools/specs-shared/spec-model";
+import {
+  SpecModel,
+  getExistedVersionOperations,
+  getPrecedingSwaggers,
+} from "@azure-tools/specs-shared/spec-model";
 
 vi.mock("@azure-tools/specs-shared/spec-model", () => ({
   SpecModel: vi.fn(),
@@ -50,7 +54,9 @@ vi.mock("node:fs", async (importOriginal) => {
   return {
     ...actual,
     appendFileSync: vi.fn(),
-    readFileSync: vi.fn().mockReturnValue('{"name": "@azure-tools/openapi-diff-runner", "version": "1.0.0"}'),
+    readFileSync: vi
+      .fn()
+      .mockReturnValue('{"name": "@azure-tools/openapi-diff-runner", "version": "1.0.0"}'),
   };
 });
 
@@ -205,17 +211,29 @@ describe("detect-breaking-change", () => {
 
       vi.mocked(getExistedVersionOperations).mockResolvedValue(mockOperations);
 
-      await checkAPIsBeingMovedToANewSpec("specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json", []);
+      await checkAPIsBeingMovedToANewSpec(
+        "specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json",
+        [],
+      );
 
-      expect(vi.mocked(getExistedVersionOperations)).toHaveBeenCalledWith("specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json", []);
+      expect(vi.mocked(getExistedVersionOperations)).toHaveBeenCalledWith(
+        "specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json",
+        [],
+      );
     });
 
     it("should handle empty moved APIs", async () => {
       vi.mocked(getExistedVersionOperations).mockResolvedValue(new Map());
 
-      await checkAPIsBeingMovedToANewSpec("specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json", []);
+      await checkAPIsBeingMovedToANewSpec(
+        "specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json",
+        [],
+      );
 
-      expect(vi.mocked(getExistedVersionOperations)).toHaveBeenCalledWith("specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json", []);
+      expect(vi.mocked(getExistedVersionOperations)).toHaveBeenCalledWith(
+        "specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json",
+        [],
+      );
     });
   });
 
@@ -237,7 +255,9 @@ describe("detect-breaking-change", () => {
     });
 
     it("should process new version swaggers", async () => {
-      mockDetectionContext.newVersionSwaggers = ["specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json"];
+      mockDetectionContext.newVersionSwaggers = [
+        "specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json",
+      ];
       mockDetectionContext.newVersionChangedSwaggers = [];
       mockDetectionContext.existingVersionSwaggers = [];
 
@@ -258,7 +278,9 @@ describe("detect-breaking-change", () => {
 
       vi.mocked(getExistedVersionOperations).mockResolvedValue(new Map());
 
-      mockDetectionContext.newVersionSwaggers = ["specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json"];
+      mockDetectionContext.newVersionSwaggers = [
+        "specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json",
+      ];
       mockDetectionContext.newVersionChangedSwaggers = [];
       mockDetectionContext.existingVersionSwaggers = [];
 
@@ -301,7 +323,7 @@ describe("detect-breaking-change", () => {
     beforeEach(() => {
       mockDetectionContext.existingVersionSwaggers = [
         "specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json",
-        "specification/storage/resource-manager/Microsoft.Storage/preview/2021-09-01-preview/storage.json"
+        "specification/storage/resource-manager/Microsoft.Storage/preview/2021-09-01-preview/storage.json",
       ];
       mockDetectionContext.msgs = [];
       mockDetectionContext.runtimeErrors = [];
@@ -331,20 +353,21 @@ describe("detect-breaking-change", () => {
     it("should accumulate violations and errors from multiple swaggers", async () => {
       mockDetectionContext.existingVersionSwaggers = [
         "specification/network/resource-manager/Microsoft.Network/stable/2021-05-01/network.json",
-        "specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json"
+        "specification/storage/resource-manager/Microsoft.Storage/stable/2021-04-01/storage.json",
       ];
 
       const result = await checkBreakingChangeOnSameVersion(mockDetectionContext);
 
       expect(result).toBeDefined();
-      expect(typeof result.oadViolationsCnt).toBe('number');
-      expect(typeof result.errorCnt).toBe('number');
+      expect(typeof result.oadViolationsCnt).toBe("number");
+      expect(typeof result.errorCnt).toBe("number");
     });
   });
 
   describe("doBreakingChangeDetection", () => {
     const mockOldSpec = "/old/spec/path.json";
-    const mockNewSpec = "specification/test/resource-manager/Microsoft.Test/stable/2021-05-01/test.json";
+    const mockNewSpec =
+      "specification/test/resource-manager/Microsoft.Test/stable/2021-05-01/test.json";
     let mockCheckout: any;
 
     beforeEach(() => {
@@ -370,12 +393,12 @@ describe("detect-breaking-change", () => {
         mockOldSpec,
         mockNewSpec,
         "SAME_VERSION" as any,
-        "stable"
+        "stable",
       );
 
       expect(result).toBeDefined();
-      expect(typeof result.oadViolationsCnt).toBe('number');
-      expect(typeof result.errorCnt).toBe('number');
+      expect(typeof result.oadViolationsCnt).toBe("number");
+      expect(typeof result.errorCnt).toBe("number");
       expect(result.oadViolationsCnt).toBeGreaterThanOrEqual(0);
       expect(result.errorCnt).toBeGreaterThanOrEqual(0);
     });
@@ -386,12 +409,12 @@ describe("detect-breaking-change", () => {
         mockOldSpec,
         mockNewSpec,
         "CROSS_VERSION" as any,
-        "preview"
+        "preview",
       );
 
       expect(result).toBeDefined();
-      expect(typeof result.oadViolationsCnt).toBe('number');
-      expect(typeof result.errorCnt).toBe('number');
+      expect(typeof result.oadViolationsCnt).toBe("number");
+      expect(typeof result.errorCnt).toBe("number");
     });
 
     it("should handle runtime errors gracefully", async () => {
@@ -412,7 +435,7 @@ describe("detect-breaking-change", () => {
         mockOldSpec,
         mockNewSpec,
         "SAME_VERSION" as any,
-        "stable"
+        "stable",
       );
 
       expect(result).toBeDefined();
@@ -429,26 +452,12 @@ describe("detect-breaking-change", () => {
         mockOldSpec,
         mockNewSpec,
         "SAME_VERSION" as any,
-        "stable"
+        "stable",
       );
 
       // The context should be updated (though the exact counts depend on mocked behavior)
       expect(mockDetectionContext.msgs.length).toBeGreaterThanOrEqual(initialMsgsLength);
       expect(mockDetectionContext.runtimeErrors.length).toBeGreaterThanOrEqual(initialErrorsLength);
-    });
-
-    it("should call checkout with correct base branch", async () => {
-      await doBreakingChangeDetection(
-        mockDetectionContext,
-        mockOldSpec,
-        mockNewSpec,
-        "CROSS_VERSION" as any,
-        "stable"
-      );
-
-      expect(mockCheckout).toHaveBeenCalledWith(
-        mockDetectionContext.context.baseBranch
-      );
     });
 
     it("should process different API version lifecycle stages", async () => {
@@ -458,7 +467,7 @@ describe("detect-breaking-change", () => {
         mockOldSpec,
         mockNewSpec,
         "SAME_VERSION" as any,
-        "stable"
+        "stable",
       );
 
       expect(stableResult).toBeDefined();
@@ -469,7 +478,7 @@ describe("detect-breaking-change", () => {
         mockOldSpec,
         mockNewSpec,
         "SAME_VERSION" as any,
-        "preview"
+        "preview",
       );
 
       expect(previewResult).toBeDefined();

@@ -146,7 +146,7 @@ export async function checkCrossVersionBreakingChange(
   oadViolationsCnt: number;
   errorCnt: number;
 }> {
-  console.log(`ENTER definition checkCrossVersionBreakingChange`);
+  logMessage(`ENTER definition checkCrossVersionBreakingChange`);
 
   let aggregateOadViolationsCnt = 0;
   let aggregateErrorCnt = 0;
@@ -155,7 +155,13 @@ export async function checkCrossVersionBreakingChange(
     .concat(detectionContext.existingVersionSwaggers.filter(isInDevFolder))) {
     const specModel = await getSpecModel(swaggerPath);
     const availableSwaggers = await specModel.getSwaggers();
+    logMessage(
+      `checkCrossVersionBreakingChange: swaggerPath: ${swaggerPath}, availableSwaggers.length: ${availableSwaggers?.length}`,
+    );
     const previousVersions = await getPrecedingSwaggers(swaggerPath, availableSwaggers);
+    logMessage(
+      `checkCrossVersionBreakingChange: previousVersions: ${JSON.stringify(previousVersions)}`,
+    );
     const previousStable = previousVersions.stable;
     const previousPreview = previousVersions.preview;
     if (previousStable) {
@@ -251,7 +257,7 @@ export async function doBreakingChangeDetection(
   let errorCnt = 0;
 
   try {
-    await detectionContext.context.prInfo!.checkout(detectionContext.context.prInfo!.baseBranch);
+    // await detectionContext.context.prInfo!.checkout(detectionContext.context.prInfo!.baseBranch);
     const oadMessages = await runOad(
       path.resolve(detectionContext.context.localSpecRepoPath, oldSpec),
       newSpec,
@@ -365,6 +371,8 @@ export function getSpecModel(swaggerPath: string): SpecModel {
     throw new Error(`Could not determine readme folder for swagger path: ${swaggerPath}`);
   }
 
+  logMessage(`getSpecModel: folder: ${folder}, swaggerPath: ${swaggerPath}`);
+
   // Check if we already have a SpecModel for this folder
   if (specModelCache.has(folder)) {
     return specModelCache.get(folder)!;
@@ -379,6 +387,9 @@ export function getSpecModel(swaggerPath: string): SpecModel {
 
 export async function checkAPIsBeingMovedToANewSpec(swaggerPath: string, availableSwaggers: any[]) {
   const movedApis = await getExistedVersionOperations(swaggerPath, availableSwaggers);
+  logMessage(
+    `checkAPIsBeingMovedToANewSpec: swaggerPath: ${swaggerPath}, movedApis.size: ${movedApis.size}`,
+  );
   if (movedApis.size > 0) {
     logMessage(
       `The swagger ${swaggerPath} has no previous version being found, but its APIs were found in other swaggers. It means that you are moving some APIs to this new swagger file.`,
@@ -395,7 +406,7 @@ export async function checkAPIsBeingMovedToANewSpec(swaggerPath: string, availab
           swaggerFile,
         ),
       );
-      console.log(`The following are details for existing APIs being moved to the new spec:`);
+      logMessage(`The following are details for existing APIs being moved to the new spec:`);
       logMessage(`  swagger file: ${swaggerFile}, operationIds: ${operationIds}\n`);
     }
   }
