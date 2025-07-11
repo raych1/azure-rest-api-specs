@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "ApiManagementClient",
+    "title": "ApiManagementClient test",
     "description": "Use these REST APIs for performing retrieve a collection of Apis associated with a tag in Azure API Management deployment.",
     "version": "2024-05-01"
   },
