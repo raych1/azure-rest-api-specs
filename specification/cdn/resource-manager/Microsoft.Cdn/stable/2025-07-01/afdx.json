@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "version": "2025-07-01",
-    "title": "CdnManagementClient test7",
+    "title": "CdnManagementClient test8",
     "description": "Use these APIs to manage Azure Front Door resources through the Azure Resource Manager. You must make sure that requests made to these resources are secure."
   },
   "host": "management.azure.com",
