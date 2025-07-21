@@ -1,7 +1,7 @@
 # Widget
 
 > see https://aka.ms/autorest
-> This is the AutoRest configuration file for Widget test.
+> This is the AutoRest configuration file for Widget test2.
 
 ## Configuration
 
