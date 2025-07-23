@@ -2,7 +2,7 @@
 
 > see https://aka.ms/autorest
 
-This is the AutoRest configuration file for MySql.
+This is the AutoRest configuration file for MySql test.
 
 ---
 
