@@ -12,7 +12,7 @@ using Azure.Core;
 
 namespace Microsoft.AzureFleet;
 
-@doc("An Compute Fleet resource")
+@doc("An Compute Fleet resource test")
 model Fleet is TrackedResource<FleetProperties> {
   @doc("The name of the Compute Fleet")
   @key("fleetName")
