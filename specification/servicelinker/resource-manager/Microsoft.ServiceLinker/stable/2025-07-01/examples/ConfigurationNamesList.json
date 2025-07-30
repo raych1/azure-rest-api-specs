@@ -8,7 +8,7 @@
         "value": [
           {
             "properties": {
-              "targetService": "MICROSOFT.APPCONFIGURATION/CONFIGURATIONSTORES",
+              "targetService": "MICROSOFT.APPCONFIGURATION/CONFIGURATIONSTORESfew",
               "clientType": "none",
               "authType": "systemAssignedIdentity",
               "names": [
