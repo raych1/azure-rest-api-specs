@@ -155,6 +155,9 @@ export async function generateSdkForSpecPr(): Promise<number> {
       if (executionReport.stagedArtifactsFolder) {
         stagedArtifactsFolder = executionReport.stagedArtifactsFolder;
         for (const pkg of executionReport.packages) {
+          if (pkg.typespecProject) {
+            hasTypeSpecProjects = true;
+          }
           if (pkg.apiViewArtifact) {
             apiViewRequestData.push({
               packageName: pkg.packageName,
