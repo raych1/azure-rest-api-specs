@@ -21,7 +21,12 @@ enum Versions {
   v2024_05_01_preview: "2024-05-01-preview",
 
   /** 2025-01-01 stable version */
+  @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
   v2025_05_01: "2025-01-01",
+
+  /** 2025-02-01 stable version */
+  @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
+  v2025_02_01: "2025-02-01",
 
   /** 2025-03-01 preview version */
   @useDependency(Azure.ResourceManager.Versions.v1_0_Preview_1)
@@ -265,10 +270,14 @@ model TrafficControllerProperties {
   /** Security Policies References List */
   @visibility(Lifecycle.Read)
   @added(Versions.v2024_05_01_preview)
+  @removed(Versions.v2025_05_01)
+  @added(Versions.v2025_02_01)
   securityPolicies?: ResourceId[];
 
   /** Security Policy Configuration */
   @added(Versions.v2024_05_01_preview)
+  @removed(Versions.v2025_05_01)
+  @added(Versions.v2025_02_01)
   securityPolicyConfigurations?: SecurityPolicyConfigurations;
 
   /** The status of the last operation. */
@@ -345,6 +354,8 @@ interface FrontendsInterface {
 }
 
 @added(Versions.v2024_05_01_preview)
+@removed(Versions.v2025_05_01)
+@added(Versions.v2025_02_01)
 @armResourceOperations
 interface SecurityPoliciesInterface {
   get is ArmResourceRead<SecurityPolicy>;
