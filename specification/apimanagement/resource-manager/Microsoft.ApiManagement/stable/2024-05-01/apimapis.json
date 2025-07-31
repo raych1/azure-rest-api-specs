@@ -52,10 +52,7 @@
         "parameters": [
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "./apimanagement.json#/parameters/ServiceNameParameter"
-          },
+          },          
           {
             "name": "$filter",
             "in": "query",
@@ -88,6 +85,9 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "$ref": "./apimanagement.json#/parameters/ServiceNameParameter"
           }
         ],
         "responses": {
@@ -95,12 +95,6 @@
             "description": "Paged Result response of Apis.",
             "schema": {
               "$ref": "./definitions.json#/definitions/ApiCollection"
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "schema": {
-              "$ref": "../../../../../common-types/resource-management/v5/types.json#/definitions/ErrorResponse"
             }
           }
         },
