@@ -165,14 +165,6 @@
             "x-ms-parameter-location": "method"
           },
           {
-            "name": "dryrunName2",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "description": "The name of dryrun2.",
-            "x-ms-parameter-location": "method"
-          },
-          {
             "name": "parameters",
             "description": "dryrun resource.",
             "in": "body",
@@ -180,6 +172,14 @@
             "schema": {
               "$ref": "#/definitions/DryrunResource"
             }
+          },
+          {
+            "name": "dryrunName2",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "The name of dryrun2.",
+            "x-ms-parameter-location": "method"
           }
         ],
         "responses": {
