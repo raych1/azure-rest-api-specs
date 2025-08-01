@@ -3,7 +3,7 @@
   "info": {
     "title": "Microsoft.ServiceLinker",
     "description": "Microsoft.ServiceLinker provider",
-    "version": "2024-04-01"
+    "version": "2005-07-01"
   },
   "host": "management.azure.com",
   "schemes": [
@@ -165,14 +165,6 @@
             "x-ms-parameter-location": "method"
           },
           {
-            "name": "dryrunName2",
-            "in": "path",
-            "required": false,
-            "type": "string",
-            "description": "The name of dryrun2.",
-            "x-ms-parameter-location": "method"
-          },
-          {
             "name": "parameters",
             "description": "dryrun resource.",
             "in": "body",
@@ -232,14 +224,6 @@
             "$ref": "../../../../../common-types/resource-management/v3/types.json#/parameters/ApiVersionParameter"
           },
           {
-            "name": "dryrunName",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "The name of dryrun.",
-            "x-ms-parameter-location": "method"
-          },
-          {
             "name": "parameters",
             "description": "dryrun resource.",
             "in": "body",
@@ -255,9 +239,6 @@
             "schema": {
               "$ref": "#/definitions/DryrunResource"
             }
-          },
-          "202": {
-            "description": "Accepted - Returns this status until the asynchronous operation has completed."
           },
           "default": {
             "description": "Error response describing why the operation failed.",
