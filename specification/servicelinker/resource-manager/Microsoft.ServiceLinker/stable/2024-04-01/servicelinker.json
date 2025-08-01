@@ -166,7 +166,7 @@
           },
           {
             "name": "dryrunName2",
-            "in": "path",
+            "in": "query",
             "required": false,
             "type": "string",
             "description": "The name of dryrun2.",
