@@ -48,9 +48,9 @@ export default async function getLabelActions({ github, context, core }) {
     return;
   }
 
-  core.info(`breaking change workflow run: ${latestBreakingChangesRun.url}`);
+  core.info(`breaking change workflow run: ${latestBreakingChangesRun.html_url}`);
   core.info(
-    `cross-version breaking change workflow run: ${latestCrossVersionBreakingChangesRun.url}`,
+    `cross-version breaking change workflow run: ${latestCrossVersionBreakingChangesRun.html_url}`,
   );
   const breakingChangesArtifactNames = (
     await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
