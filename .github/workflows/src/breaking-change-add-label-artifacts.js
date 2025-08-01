@@ -2,9 +2,9 @@
 
 import { REVIEW_REQUIRED_LABELS } from "../../shared/src/breaking-change.js";
 import { PER_PAGE_MAX } from "../../shared/src/github.js";
+import { byDate, invert } from "../../shared/src/sort.js";
 import { extractInputs } from "./context.js";
 
-/* v8 ignore start */
 /**
  * @param {import('@actions/github-script').AsyncFunctionArguments} AsyncFunctionArguments
  * @returns {Promise<void>}
@@ -27,12 +27,12 @@ export default async function getLabelActions({ github, context, core }) {
   const latestBreakingChangesRun = workflowRuns
     .filter((wf) => wf.name === "[TEST-IGNORE] Swagger BreakingChange - Analyze Code")
     // Sort by "updated_at" descending
-    .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())[0];
+    .sort(invert(byDate((wf) => wf.updated_at)))[0];
 
   const latestCrossVersionBreakingChangesRun = workflowRuns
     .filter((wf) => wf.name === "[TEST-IGNORE] Breaking Change(Cross-Version) - Analyze Code")
     // Sort by "updated_at" descending
-    .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())[0];
+    .sort(invert(byDate((wf) => wf.updated_at)))[0];
 
   // Add null checks before accessing artifacts
   if (!latestBreakingChangesRun || latestBreakingChangesRun.status !== "completed") {
@@ -48,9 +48,9 @@ export default async function getLabelActions({ github, context, core }) {
     return;
   }
 
-  core.info(`breaking change workflow run: ${latestBreakingChangesRun.html_url}`);
+  core.info(`breaking change workflow run: ${latestBreakingChangesRun.url}`);
   core.info(
-    `cross-version breaking change workflow run: ${latestCrossVersionBreakingChangesRun.html_url}`,
+    `cross-version breaking change workflow run: ${latestCrossVersionBreakingChangesRun.url}`,
   );
   const breakingChangesArtifactNames = (
     await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
