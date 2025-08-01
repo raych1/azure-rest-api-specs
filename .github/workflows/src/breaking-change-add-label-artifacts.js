@@ -48,6 +48,10 @@ export default async function getLabelActions({ github, context, core }) {
     return;
   }
 
+  core.info(`breaking change workflow run: ${latestBreakingChangesRun.url}`);
+  core.info(
+    `cross-version breaking change workflow run: ${latestCrossVersionBreakingChangesRun.url}`,
+  );
   const breakingChangesArtifactNames = (
     await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
       owner: owner,
