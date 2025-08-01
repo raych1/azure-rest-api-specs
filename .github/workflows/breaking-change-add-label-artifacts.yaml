@@ -64,7 +64,7 @@ jobs:
           name: "${{ steps.get-label-actions.outputs.versioningReviewLabelName }}"
           value: "${{ steps.get-label-actions.outputs.versioningReviewLabelValue == 'true' }}"
 
-      - if: ${{ always() && fromJson(steps.get-label-actions.outputs.issue_number) > 0 }}
+      - if: ${{ always() && steps.get-label-actions.outputs.issue_number > 0 }}
         name: Upload artifact with issue number
         uses: ./.github/actions/add-empty-artifact
         with:
