@@ -22,7 +22,7 @@ parameters:
     type: string
     default: ''
     displayName: 'SDK release type'
-  - name: SkipPullRequestCreation
+  - name: CreatePullRequest
     type: boolean
     default: false
   - name: SpecBatchTypes
@@ -194,11 +194,15 @@ stages:
         displayName: 'Generate SDK'
 
       - pwsh: |
-          Write-Host "=== Git Status ===" -ForegroundColor Yellow
-          git status --porcelain
-          
-          Write-Host "`n=== Git Diff (unstaged changes) ===" -ForegroundColor Yellow
-          $diff = git diff
+          # Configure git to not warn about line ending conversions
+          git config core.autocrlf input
+          git config core.safecrlf false
+
+          Write-Host "git add -A"
+          git add -A
+
+          Write-Host "`n=== Git Diff (staged changes) ===" -ForegroundColor Yellow
+          $diff = git diff --cached
           foreach ($line in $diff) {
             if ($line.StartsWith("+")) {
               Write-Host "`e[32m$line`e[0m"
@@ -208,9 +212,6 @@ stages:
               Write-Host $line
             }
           }
-          
-          Write-Host "`n=== Untracked Files ===" -ForegroundColor Yellow
-          git ls-files --others --exclude-standard
         workingDirectory: $(SdkRepoDirectory)
         displayName: 'Print SDK Repo Git Diff with Color'
 
@@ -226,7 +227,7 @@ stages:
           ArtifactPath: $(StagedArtifactsFolder)
           CustomCondition: and(succeededOrFailed(), ne(variables['StagedArtifactsFolder'], ''))
 
-      - ${{ if and(eq(variables['System.TeamProject'], 'internal'), eq(parameters.SkipPullRequestCreation, false), ne(variables['Build.Reason'], 'PullRequest')) }}:
+      - ${{ if and(eq(variables['System.TeamProject'], 'internal'), eq(parameters.CreatePullRequest, true), ne(variables['Build.Reason'], 'PullRequest')) }}:
         - template: /eng/common/pipelines/templates/steps/git-push-changes.yml
           parameters:
             BaseRepoBranch: $(PrBranch)-$(Build.BuildId)
