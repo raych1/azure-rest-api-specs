@@ -70,6 +70,12 @@
           },
           {
             "$ref": "../../../../../common-types/resource-management/v5/types.json#/parameters/SubscriptionIdParameter"
+          },
+          {
+            "name": "runName",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
