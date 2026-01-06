@@ -1,0 +1,50 @@
+name: "test identity"
+
+on:
+  pull_request:
+    types:
+      # default
+      - opened
+      - synchronize
+      - reopened
+      # re-run if base branch is changed, since previous merge commit may generate incorrect diff
+      - edited
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test-identity:    
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            .github
+
+      # Only run the login and get token steps when the repository is azure-rest-api-specs-pr
+      - name: Azure Login with Workload Identity Federation
+        uses: azure/login@v2
+        with:
+          client-id: "205398f1-715f-40a7-8d52-856097f28281"
+          tenant-id: "72f988bf-86f1-41af-91ab-2d7cd011db47"
+          allow-no-subscriptions: true
+
+      - name: Get ADO Token via Managed Identity
+        run: |
+          # Get token for Azure DevOps resource
+          ADO_TOKEN=$(az account get-access-token --resource "499b84ac-1321-427f-aa17-267ca6975798" --query "accessToken" -o tsv)
+          echo "ADO_TOKEN=$ADO_TOKEN" >> "$GITHUB_ENV"
+
+      - name: Install dependencies for github-script actions
+        uses: ./.github/actions/install-deps-github-script
+
+      - name: "SDK Validation Test"
+        id: test-identity
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const test =
+              (await import('${{ github.workspace }}/.github/workflows/src/test.js')).default;
+            return await test({ core });
