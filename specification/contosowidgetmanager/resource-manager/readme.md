@@ -5,7 +5,7 @@ This is the AutoRest configuration file for Contoso.
 
 ## Getting Started
 
-To build the SDKs for My API, simply install AutoRest via `npm` (`npm install -g autorest`) and then run test:
+To build the SDKs for My API, simply install AutoRest via `npm` (`npm install -g autorest`) and then run te:
 
 > `autorest readme.md`
 To see additional help and options, run:
