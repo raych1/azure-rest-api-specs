@@ -6,7 +6,7 @@
 #########
 
 #########
-# Codeowner assignments are made from the _last_ matching entry in CODEOWNERS, so catch-all entries must come first
+# Codeowner assignments are made from the _last_ matching entry in CODEOWNERS, so catch-all entries must come first attempt
 #########
 
 # PRLabel: %Schema Registry
