@@ -10,7 +10,7 @@ Below are code convention we strive to follow in `eng` directory:
 
 ### package.json
 
-- We align `package.json` dependencies versions across all `package.json` files.
+- We align `package.json` dependencies versions across all `package.json` files list.
 - We align `package.json` dependencies numbers with [microsoft/typespec package.json].
   In few cases we allow more frequent update cadence.
 - We avoid doing package overrides. For example, we use `v8` of `eslint` instead of `v9` to avoid an override.
