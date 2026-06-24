@@ -24,7 +24,7 @@
 
    ```bash
    waza check                  # check all skills
-   waza dev my-skill           # improve with real-time scoring
+   waza dev my-skill           # improve with real-time scoring test
    ```
 
 5. Push to trigger CI:
