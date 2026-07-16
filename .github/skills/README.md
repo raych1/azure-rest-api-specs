@@ -42,7 +42,7 @@ The **ARM API Reviewer** agent
 is a read-only PR review agent that checks Azure REST API specifications
 for conformance to Azure REST API Guidelines, ARM RPC rules, and
 repository conventions. It reviews OpenAPI JSON, TypeSpec, example
-files, and suppression configurations.
+files, and suppression configurations, test comment.
 
 The agent depends on the **azure-api-review** shared skill
 ([`skills/azure-api-review/`](azure-api-review/)) and three
