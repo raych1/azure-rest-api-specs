@@ -1,4 +1,4 @@
-name: "Azure OpenAPI"
+name: "Azure OpenAPI test"
 
 pool:
   name: azsdk-pool
